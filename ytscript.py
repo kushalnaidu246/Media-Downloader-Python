@@ -54,7 +54,9 @@ if format_choice == "mp3":
     })
 else:
     ydl_opts.update({
+        # Highest resolution wins; H.264/AAC preferred among equal resolutions
         "format": "bv*+ba/b",
+        "format_sort": ["res", "fps", "vcodec:h264", "acodec:aac"],
         "merge_output_format": "mp4",
     })
 
@@ -74,10 +76,11 @@ except Exception as e:
     if "403" in error_str or "Forbidden" in error_str or "JavaScript runtime" in error_str:
         print("\nStandard download failed. Retrying automatically using mobile client fallback...")
         
-        # Fall back to mobile player clients (which don't require external JS engines)
+        # NOTE: ios/android clients only expose 360p (format 18) without a PO token,
+        # which is why downloads were not HD. Use clients that still serve HD formats.
         ydl_opts["extractor_args"] = {
             "youtube": {
-                "player_client": ["ios", "android"]
+                "player_client": ["web_embedded", "tv", "mweb"]
             }
         }
         
