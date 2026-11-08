@@ -7,7 +7,8 @@ if [ ! -x .venv/bin/python ]; then
   python3 -m venv .venv || { echo "Python 3 is required: https://www.python.org/downloads/"; read -n1 -p "Press any key to close"; exit 1; }
   .venv/bin/pip install -q -r requirements.txt
 else
-  # keep yt-dlp fresh; YouTube breaks old versions often
+  # pick up any new dependencies, and keep yt-dlp fresh (YouTube breaks old versions often)
+  .venv/bin/pip install -q -r requirements.txt 2>/dev/null
   .venv/bin/pip install -q -U yt-dlp 2>/dev/null
 fi
 
